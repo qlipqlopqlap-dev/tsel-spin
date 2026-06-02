@@ -1,0 +1,22 @@
+# dependencies / build
+node_modules
+dist
+dist-ssr
+
+# generated
+src/routeTree.gen.ts
+
+# env & secrets (keep the example)
+.env
+.env.*
+!.env.example
+
+# logs
+logs/
+*.log
+npm-debug.log*
+
+# os / editor / local agent settings
+.DS_Store
+*.local
+.claude/settings.local.json
