@@ -51,7 +51,7 @@ export function ResultOverlay({ prize }: ResultOverlayProps) {
       {/* ★ Selamat Kamu Menang ★ */}
       <h2 className="flex items-center justify-center gap-2.5 font-display text-[clamp(1.05rem,4.6vw,1.4rem)] font-extrabold text-tsel-gold drop-shadow-[0_2px_0_rgba(124,12,30,0.5)]">
         <Star className="h-5 w-5 fill-tsel-gold text-tsel-gold" strokeWidth={2} />
-        Selamat Kamu Menang
+        Selamat
         <Star className="h-5 w-5 fill-tsel-gold text-tsel-gold" strokeWidth={2} />
       </h2>
 

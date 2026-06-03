@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url'
 const ROOT = fileURLToPath(new URL('.', import.meta.url))
 const DIST = join(ROOT, 'dist')
 const HOST = process.env.HOST || '127.0.0.1'
-const PORT = Number(process.env.PORT || 5281)
+const PORT = Number(process.env.PORT || 5285)
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -79,5 +79,5 @@ const server = createServer(async (req, res) => {
 })
 
 server.listen(PORT, HOST, () => {
-  console.log(`tsel-spin serving ${DIST} on http://${HOST}:${PORT}`)
+  console.log(`tsel-spin-double serving ${DIST} on http://${HOST}:${PORT}`)
 })

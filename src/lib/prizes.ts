@@ -76,7 +76,7 @@ export const PRIZES: Prize[] = [
     accent: 'bg-amber-500',
     bigValue: '50',
     bigUnit: 'RIBU',
-    tagline: 'Pulsa siap diklaim di nomor kamu',
+    tagline: 'Kamu bisa claim pulsa',
   },
   {
     id: 'voucher',

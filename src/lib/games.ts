@@ -62,7 +62,7 @@ export const GAMES: Record<GameId, GameConfig> = {
     route: '/gosok',
     name: 'Gosok Kartu',
     icon: Sparkles,
-    lead: 'Kamu dapat {1 tiket} yang bisa dibuka!',
+    lead: 'Dobelin {kesempatan menangmu}!',
     instruction: 'Pilih salah satu tiket di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Mulai Gosok',
     steps: [
@@ -76,7 +76,7 @@ export const GAMES: Record<GameId, GameConfig> = {
     route: '/spin',
     name: 'Putar Roda',
     icon: RotateCw,
-    lead: 'Kamu dapat {1 putaran} roda keberuntungan!',
+    lead: 'Dobelin {kesempatan menangmu}!',
     instruction: 'Putar roda di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Putar Sekarang',
     steps: [
@@ -90,7 +90,7 @@ export const GAMES: Record<GameId, GameConfig> = {
     route: '/egg',
     name: 'Pecahkan Telur',
     icon: Egg,
-    lead: 'Kamu dapat {1 telur} yang bisa dipecahkan!',
+    lead: 'Dobelin {kesempatan menangmu}!',
     instruction: 'Pilih salah satu telur di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Pecahkan Sekarang',
     steps: [
@@ -104,7 +104,7 @@ export const GAMES: Record<GameId, GameConfig> = {
     route: '/koper',
     name: 'Pilih Koper',
     icon: Briefcase,
-    lead: 'Kamu dapat {1 koper} yang bisa dibuka!',
+    lead: 'Dobelin {kesempatan menangmu}!',
     instruction: 'Pilih salah satu koper di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Pilih Koper',
     steps: [

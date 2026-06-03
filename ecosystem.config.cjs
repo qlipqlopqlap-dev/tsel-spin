@@ -1,11 +1,11 @@
-// PM2 ecosystem config — Putar Roda (standalone, port 5281).
-// nginx reverse-proxies telkomsel2.qlipmobile.com → 127.0.0.1:5281.
+// PM2 ecosystem config — Gosok Kartu (Double) (standalone, port 5285).
+// nginx reverse-proxies telkomsel2double.qlipmobile.com → 127.0.0.1:5285.
 
 module.exports = {
   apps: [
     {
-      name: 'tsel-spin',
-      cwd: '/home/qlip/tsel-spin',
+      name: 'tsel-spin-double',
+      cwd: '/home/qlip/tsel-spin-double',
       script: 'server.mjs',
       interpreter: 'node',
       instances: 1,
@@ -14,7 +14,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         HOST: '127.0.0.1',
-        PORT: '5281',
+        PORT: '5285',
       },
 
       // Restart behavior
@@ -27,8 +27,8 @@ module.exports = {
 
       // Logs
       log_date_format: 'YYYY-MM-DD HH:mm:ss',
-      error_file: '/home/qlip/tsel-spin/logs/tsel-spin.err.log',
-      out_file: '/home/qlip/tsel-spin/logs/tsel-spin.out.log',
+      error_file: '/home/qlip/tsel-spin-double/logs/tsel-spin-double.err.log',
+      out_file: '/home/qlip/tsel-spin-double/logs/tsel-spin-double.out.log',
       merge_logs: true,
       time: true,
     },
