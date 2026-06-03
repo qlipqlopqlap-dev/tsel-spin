@@ -76,7 +76,7 @@ function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () =>
  */
 export function GameScreen({ dapat, instruction, expired, onExpire, children }: GameScreenProps) {
   return (
-    <main className="relative flex min-h-dvh flex-col bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
+    <main className="relative flex h-dvh flex-col overflow-hidden bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
       {/* warm gold ambient glow — clipped by PhoneFrame's overflow-hidden */}
       <div
         aria-hidden
