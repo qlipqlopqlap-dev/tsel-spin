@@ -57,7 +57,7 @@ export function SpinWheel({ disabled, reduced, prize, onResult }: SpinWheelProps
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-[320px] px-2">
+    <div className="relative mx-auto w-full max-w-[360px] px-2">
       {/* fixed pointer */}
       <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1">
         <div className="h-0 w-0 border-x-[14px] border-t-[22px] border-x-transparent border-t-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.3)]" />
