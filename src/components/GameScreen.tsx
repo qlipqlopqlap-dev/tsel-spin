@@ -91,8 +91,8 @@ export function GameScreen({ dapat, instruction, expired, onExpire, children }: 
         </a>
       </header>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-1">
-        {/* Hero text — pushed near the top */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-8">
+        {/* Hero text — nudged slightly past the top toward vertical center */}
         <div className="flex flex-col items-center text-center">
           <h1 className="font-display text-[46px] font-extrabold leading-[0.95] text-tsel-gold drop-shadow-[0_3px_0_rgba(123,12,30,0.4)]">
             Selamat!
