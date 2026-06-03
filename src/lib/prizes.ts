@@ -21,6 +21,12 @@ export interface Prize {
   icon: LucideIcon
   /** Tailwind classes for the prize's accent badge. */
   accent: string
+  /** Big number on the result ticket (e.g. "15"). */
+  bigValue: string
+  /** Optional unit shown smaller next to bigValue (e.g. "GB"). */
+  bigUnit?: string
+  /** Tagline shown above the big value on the result ticket. */
+  tagline: string
 }
 
 export const PRIZES: Prize[] = [
@@ -32,6 +38,9 @@ export const PRIZES: Prize[] = [
     weight: 30,
     icon: Wifi,
     accent: 'bg-emerald-500',
+    bigValue: '5',
+    bigUnit: 'GB',
+    tagline: 'Kuota internet siap diklaim di nomor kamu',
   },
   {
     id: 'pulsa25',
@@ -41,6 +50,9 @@ export const PRIZES: Prize[] = [
     weight: 25,
     icon: Smartphone,
     accent: 'bg-tsel-orange',
+    bigValue: '25',
+    bigUnit: 'RIBU',
+    tagline: 'Pulsa siap diklaim di nomor kamu',
   },
   {
     id: 'kuota15',
@@ -50,6 +62,9 @@ export const PRIZES: Prize[] = [
     weight: 20,
     icon: Wifi,
     accent: 'bg-sky-500',
+    bigValue: '15',
+    bigUnit: 'GB',
+    tagline: 'Kuota internet siap diklaim di nomor kamu',
   },
   {
     id: 'pulsa50',
@@ -59,6 +74,9 @@ export const PRIZES: Prize[] = [
     weight: 15,
     icon: Smartphone,
     accent: 'bg-amber-500',
+    bigValue: '50',
+    bigUnit: 'RIBU',
+    tagline: 'Pulsa siap diklaim di nomor kamu',
   },
   {
     id: 'voucher',
@@ -68,6 +86,8 @@ export const PRIZES: Prize[] = [
     weight: 9,
     icon: Ticket,
     accent: 'bg-violet-500',
+    bigValue: 'Voucher',
+    tagline: 'Voucher belanja siap diklaim untukmu',
   },
   {
     id: 'iphone17',
@@ -77,6 +97,8 @@ export const PRIZES: Prize[] = [
     weight: 1,
     icon: Trophy,
     accent: 'bg-slate-800',
+    bigValue: 'iPhone 17',
+    tagline: 'Hadiah utama siap diklaim untukmu',
   },
 ]
 

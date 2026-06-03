@@ -1,91 +1,114 @@
-import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Check, PartyPopper, ShieldCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Star, Loader2, Check } from 'lucide-react'
 import type { Prize } from '../lib/prizes'
-import { PrizeBadge } from './PrizeBadge'
-import { Button } from './Button'
-import { CAMPAIGN } from '../lib/content'
 import { claimUrl } from '../lib/urls'
 import { usePrefersReducedMotion } from '../lib/useReducedMotion'
 import { fireConfetti } from '../lib/confetti'
 
 interface ResultOverlayProps {
-  open: boolean
-  prize: Prize | null
+  prize: Prize
 }
 
-/** Full-screen win overlay shared by every game. Claiming happens inline. */
-export function ResultOverlay({ open, prize }: ResultOverlayProps) {
+/**
+ * Inline result panel rendered inside the game area when the user wins.
+ * Renders the "Selamat Kamu Menang" title, the orange prize ticket card with
+ * the big amount, and the cream claim button. The game's header + countdown
+ * above (provided by GameScreen) stays visible so the page reads as one piece.
+ */
+export function ResultOverlay({ prize }: ResultOverlayProps) {
   const reduced = usePrefersReducedMotion()
+  const [connecting, setConnecting] = useState(false)
   const [claimed, setClaimed] = useState(false)
 
+  // Celebrate as soon as the panel mounts.
+  useEffect(() => {
+    if (!reduced) fireConfetti()
+  }, [reduced])
+
   function claim() {
-    // When a registration URL is configured, KLAIM sends the user there
-    // (the real conversion). Otherwise show the inline success state.
     const url = claimUrl()
     if (url) {
-      window.location.assign(url)
+      setConnecting(true)
+      // Briefly show "Menghubungkan ke Telkomsel", then hand off to the claim flow.
+      window.setTimeout(() => window.location.assign(url), 900)
       return
     }
     setClaimed(true)
-    if (!reduced) fireConfetti()
   }
 
+  const showUnit = Boolean(prize.bigUnit)
+
   return (
-    <AnimatePresence>
-      {open && prize && (
-        <motion.div
-          className="fixed inset-0 z-50 grid place-items-center p-5"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <div className="absolute inset-0 bg-black/60" />
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Hasil undian"
-            initial={{ scale: 0.85, y: 24 }}
-            animate={{ scale: 1, y: 0 }}
-            exit={{ scale: 0.9, opacity: 0 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="relative w-full max-w-[24rem] rounded-[2rem] bg-white p-6 text-center shadow-clay"
-          >
-            <span className="mx-auto mb-2 grid h-14 w-14 place-items-center rounded-full bg-tsel-gold text-tsel-ink shadow-clay">
-              <PartyPopper className="h-8 w-8" strokeWidth={2.5} />
+    <motion.div
+      role="region"
+      aria-label="Kamu menang"
+      initial={{ scale: 0.94, opacity: 0, y: 12 }}
+      animate={{ scale: 1, opacity: 1, y: 0 }}
+      transition={{ type: 'spring', damping: 22, stiffness: 260 }}
+      className="w-full text-center"
+    >
+      {/* ★ Selamat Kamu Menang ★ */}
+      <h2 className="flex items-center justify-center gap-3 font-display text-[22px] font-extrabold text-tsel-gold drop-shadow-[0_2px_0_rgba(124,12,30,0.5)]">
+        <Star className="h-5 w-5 fill-tsel-gold text-tsel-gold" strokeWidth={2} />
+        Selamat Kamu Menang
+        <Star className="h-5 w-5 fill-tsel-gold text-tsel-gold" strokeWidth={2} />
+      </h2>
+
+      {/* Orange ticket card with side notches */}
+      <div className="relative mt-3">
+        <span
+          aria-hidden
+          className="absolute left-0 top-1/2 z-10 h-7 w-7 -translate-x-1/2 -translate-y-1/2 rounded-full bg-tsel-ink"
+        />
+        <span
+          aria-hidden
+          className="absolute right-0 top-1/2 z-10 h-7 w-7 -translate-y-1/2 translate-x-1/2 rounded-full bg-tsel-ink"
+        />
+        <div className="rounded-[2rem] bg-gradient-to-b from-[#FFC97A] via-[#FF9F4A] to-[#FF6B35] px-6 py-6 shadow-clay ring-1 ring-inset ring-white/30">
+          <p className="mx-auto max-w-[22ch] font-display text-[14px] font-semibold leading-tight text-white">
+            {prize.tagline}
+          </p>
+          <div className="mt-3 flex flex-col items-center leading-none">
+            <span className="font-display text-[96px] font-extrabold leading-[0.85] text-white drop-shadow-[0_5px_0_rgba(160,40,12,0.35)]">
+              {prize.bigValue}
             </span>
-            <h2 className="font-display text-3xl font-extrabold text-tsel-ink">Selamat!</h2>
-            <p className="mb-4 mt-0.5 text-sm text-neutral-500">Kamu memenangkan hadiah</p>
-
-            <PrizeBadge prize={prize} size="lg" />
-            <p className="mx-auto mt-3 max-w-[30ch] text-sm leading-relaxed text-neutral-600">{prize.desc}</p>
-
-            <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-tsel-gold/40 px-3 py-1 text-xs font-semibold text-tsel-ink">
-              <ShieldCheck className="h-4 w-4" />
-              {CAMPAIGN.validUntil}
-            </div>
-
-            <div className="mt-5">
-              {claimed ? (
-                <div className="flex items-center justify-center gap-2 rounded-full bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                  <Check className="h-5 w-5" />
-                  Berhasil diklaim! Diproses 1x24 jam.
-                </div>
-              ) : (
-                <Button variant="claim" onClick={claim}>
-                  KLAIM SEKARANG
-                </Button>
-              )}
-            </div>
-
-            {claimed && (
-              <p className="mt-3 text-xs leading-relaxed text-neutral-500">
-                Hadiah dikirim otomatis ke nomor Telkomsel-mu. Hubungi {CAMPAIGN.callCenter} bila perlu.
-              </p>
+            {showUnit && (
+              <span className="mt-2 font-display text-[28px] font-extrabold tracking-[0.04em] text-white drop-shadow-[0_3px_0_rgba(160,40,12,0.3)]">
+                {prize.bigUnit}
+              </span>
             )}
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+          </div>
+        </div>
+      </div>
+
+      {/* Cream claim button (or connecting / claimed state) */}
+      <div className="mt-4">
+        {claimed ? (
+          <div className="flex items-center justify-center gap-2 rounded-3xl bg-tsel-cream px-5 py-3.5 font-display text-base font-extrabold text-tsel-red shadow-clay-sm">
+            <Check className="h-5 w-5" />
+            Bonus berhasil diklaim!
+          </div>
+        ) : connecting ? (
+          <div className="flex items-center justify-center gap-2 rounded-3xl bg-tsel-cream px-5 py-3.5 font-display text-base font-extrabold text-tsel-red shadow-clay-sm">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            Menghubungkan ke Telkomsel…
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={claim}
+            className="block w-full rounded-3xl bg-tsel-cream px-5 py-3 shadow-clay-sm ring-1 ring-inset ring-white/40 transition-transform active:scale-[0.98]"
+          >
+            <span className="block font-display text-[20px] font-extrabold leading-tight text-tsel-red">
+              Klik Disini Untuk Klaim
+            </span>
+            <span className="mt-0.5 block text-[11px] font-semibold text-tsel-ink/70">
+              (Menghubungkan ke Telkomsel)
+            </span>
+          </button>
+        )}
+      </div>
+    </motion.div>
   )
 }

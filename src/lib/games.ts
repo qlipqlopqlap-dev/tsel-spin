@@ -63,12 +63,12 @@ export const GAMES: Record<GameId, GameConfig> = {
     name: 'Gosok Kartu',
     icon: Sparkles,
     lead: 'Kamu dapat {1 tiket} yang bisa dibuka!',
-    instruction: 'Pilih salah satu tiket di bawah untuk membuka hadiah kuotamu',
+    instruction: 'Pilih salah satu tiket di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Mulai Gosok',
     steps: [
       { icon: MousePointerClick, title: 'Pilih Tiket', desc: 'Tap 1 dari 6 kartu tiket yang tersedia.' },
-      { icon: Sparkles, title: 'Gosok Kartu', desc: 'Gosok permukaan perak untuk membuka hadiah.' },
-      { icon: Gift, title: 'Klaim Hadiah', desc: 'Tekan KLAIM, hadiah langsung dikirim ke nomormu.' },
+      { icon: Sparkles, title: 'Gosok Kartu', desc: 'Gosok permukaan perak untuk membuka bonus.' },
+      { icon: Gift, title: 'Klaim Bonus', desc: 'Tekan tombol klaim, bonus langsung dikirim ke nomormu.' },
     ],
   },
   spin: {
@@ -77,12 +77,12 @@ export const GAMES: Record<GameId, GameConfig> = {
     name: 'Putar Roda',
     icon: RotateCw,
     lead: 'Kamu dapat {1 putaran} roda keberuntungan!',
-    instruction: 'Putar roda di bawah untuk membuka hadiah kuotamu',
+    instruction: 'Putar roda di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Putar Sekarang',
     steps: [
       { icon: PlayCircle, title: 'Tekan Putar', desc: 'Tap tombol SPIN di tengah roda.' },
-      { icon: RotateCw, title: 'Tunggu Berhenti', desc: 'Roda berputar dan berhenti di hadiahmu.' },
-      { icon: Gift, title: 'Klaim Hadiah', desc: 'Tekan KLAIM, hadiah langsung dikirim ke nomormu.' },
+      { icon: RotateCw, title: 'Tunggu Berhenti', desc: 'Roda berputar dan berhenti di bonusmu.' },
+      { icon: Gift, title: 'Klaim Bonus', desc: 'Tekan tombol klaim, bonus langsung dikirim ke nomormu.' },
     ],
   },
   egg: {
@@ -91,12 +91,12 @@ export const GAMES: Record<GameId, GameConfig> = {
     name: 'Pecahkan Telur',
     icon: Egg,
     lead: 'Kamu dapat {1 telur} yang bisa dipecahkan!',
-    instruction: 'Pilih salah satu telur di bawah untuk membuka hadiah kuotamu',
+    instruction: 'Pilih salah satu telur di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Pecahkan Sekarang',
     steps: [
       { icon: Hand, title: 'Pilih Telur', desc: 'Tap 1 dari 6 telur misteri yang tersedia.' },
-      { icon: Hammer, title: 'Pecahkan', desc: 'Telur akan pecah dan hadiah muncul di dalamnya.' },
-      { icon: Gift, title: 'Klaim Hadiah', desc: 'Tekan KLAIM, hadiah langsung dikirim ke nomormu.' },
+      { icon: Hammer, title: 'Pecahkan', desc: 'Telur akan pecah dan bonus muncul di dalamnya.' },
+      { icon: Gift, title: 'Klaim Bonus', desc: 'Tekan tombol klaim, bonus langsung dikirim ke nomormu.' },
     ],
   },
   koper: {
@@ -105,12 +105,12 @@ export const GAMES: Record<GameId, GameConfig> = {
     name: 'Pilih Koper',
     icon: Briefcase,
     lead: 'Kamu dapat {1 koper} yang bisa dibuka!',
-    instruction: 'Pilih salah satu koper di bawah untuk membuka hadiah kuotamu',
+    instruction: 'Pilih salah satu koper di bawah untuk membuka bonus yang bisa kamu klaim',
     cta: 'Pilih Koper',
     steps: [
       { icon: CircleDot, title: 'Pilih Koper', desc: 'Tap 1 dari 6 koper di panggung.' },
-      { icon: Briefcase, title: 'Buka Kopernya', desc: 'Koper terbuka dan hadiah ada di dalamnya.' },
-      { icon: Send, title: 'Klaim Hadiah', desc: 'Tekan KLAIM, hadiah langsung dikirim ke nomormu.' },
+      { icon: Briefcase, title: 'Buka Kopernya', desc: 'Koper terbuka dan bonus ada di dalamnya.' },
+      { icon: Send, title: 'Klaim Bonus', desc: 'Tekan tombol klaim, bonus langsung dikirim ke nomormu.' },
     ],
   },
 }

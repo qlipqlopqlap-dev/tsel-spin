@@ -10,16 +10,17 @@ const WIN = getPrize('kuota15')
 export function SpinPage() {
   const { prize, revealed, expired, setExpired, reveal, reduced } = useGameSession()
   return (
-    <>
-      <GameScreen
-        dapat={GAMES.spin.lead}
-        instruction={GAMES.spin.instruction}
-        expired={expired}
-        onExpire={() => setExpired(true)}
-      >
+    <GameScreen
+      dapat={GAMES.spin.lead}
+      instruction={GAMES.spin.instruction}
+      expired={expired}
+      onExpire={() => setExpired(true)}
+    >
+      {revealed && prize ? (
+        <ResultOverlay prize={prize} />
+      ) : (
         <SpinWheel disabled={expired || revealed} reduced={reduced} prize={WIN} onResult={reveal} />
-      </GameScreen>
-      <ResultOverlay open={revealed} prize={prize} />
-    </>
+      )}
+    </GameScreen>
   )
 }
