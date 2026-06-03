@@ -42,14 +42,14 @@ function Highlight({ text }: { text: string }) {
  */
 function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () => void }) {
   return (
-    <div className="relative flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-b from-tsel-cream to-[#f3d896] px-5 py-3.5 shadow-clay ring-1 ring-inset ring-white/50">
+    <div className="relative flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-b from-tsel-cream to-[#f3d896] px-4 py-3 shadow-clay ring-1 ring-inset ring-white/50">
       <div className="min-w-0">
-        <p className="flex items-center gap-1.5 font-display text-[12px] font-bold uppercase tracking-wider text-tsel-ink/65">
+        <p className="flex items-center gap-1.5 font-display text-[11px] font-bold uppercase tracking-wider text-tsel-ink/65">
           <Clock className="h-3 w-3" strokeWidth={2.6} />
           Hangus dalam
         </p>
-        <div className="mt-1 flex items-center gap-2 font-display text-[30px] font-extrabold leading-none text-tsel-red drop-shadow-[0_1px_0_rgba(124,12,30,0.18)]">
-          <span aria-hidden className="inline-block h-2.5 w-2.5 shrink-0 animate-pulse rounded-full bg-tsel-red" />
+        <div className="mt-0.5 flex items-center gap-2 font-display text-[26px] font-extrabold leading-none text-tsel-red drop-shadow-[0_1px_0_rgba(124,12,30,0.18)]">
+          <span aria-hidden className="inline-block h-2 w-2 shrink-0 animate-pulse rounded-full bg-tsel-red" />
           {expired ? (
             <span>Hangus</span>
           ) : (
@@ -59,56 +59,66 @@ function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () =>
       </div>
       <span
         aria-hidden
-        className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-tsel-orange/25 to-tsel-orange/10 text-tsel-orange ring-1 ring-inset ring-tsel-orange/30"
+        className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-tsel-orange/25 to-tsel-orange/10 text-tsel-orange ring-1 ring-inset ring-tsel-orange/30"
       >
-        <TicketPercent className="h-7 w-7" strokeWidth={2.3} />
+        <TicketPercent className="h-6 w-6" strokeWidth={2.3} />
       </span>
     </div>
   )
 }
 
 /**
- * Single-screen game chrome (no scroll): compact Telkomsel home chip,
- * a celebratory intro (top), a big cream countdown bar (middle), the game,
- * and a consent footer kept slightly off the bottom edge.
+ * Game chrome with mobile-first sizing: compact Telkomsel brand chip, a
+ * celebratory intro, the big cream countdown bar, the game, and a consent
+ * footer. Layout is `min-h-dvh` instead of `h-dvh` so very short viewports
+ * (iPhone SE) can scroll a touch instead of clipping the footer. Safe-area
+ * insets are respected for the iPhone notch + home indicator.
  */
 export function GameScreen({ dapat, instruction, expired, onExpire, children }: GameScreenProps) {
   return (
-    <main className="relative flex h-dvh flex-col overflow-hidden bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
-      {/* warm gold ambient glow behind the game for depth */}
+    <main className="relative flex min-h-dvh flex-col bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
+      {/* warm gold ambient glow — clipped by PhoneFrame's overflow-hidden */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-[58%] h-[64vmin] w-[64vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-tsel-gold/15 blur-[72px]"
+        className="pointer-events-none absolute left-1/2 top-[58%] h-[60vmin] w-[60vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-tsel-gold/15 blur-[64px]"
       />
 
-      <header className="relative z-10 flex shrink-0 items-center justify-between px-5 pt-3">
+      <header
+        className="relative z-10 flex shrink-0 items-center justify-between px-5"
+        style={{ paddingTop: 'max(12px, env(safe-area-inset-top))' }}
+      >
         <span className="rounded-full bg-white px-3.5 py-1.5 font-display text-[13px] font-extrabold text-tsel-red shadow-clay-sm ring-1 ring-inset ring-white">
           {CAMPAIGN.brand}
         </span>
       </header>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-8">
-        {/* Hero text — nudged slightly past the top toward vertical center */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-5">
+        {/* Hero text — compact so it fits on smaller phones */}
         <div className="flex flex-col items-center text-center">
-          <h1 className="font-display text-[46px] font-extrabold leading-[0.95] text-tsel-gold drop-shadow-[0_3px_0_rgba(123,12,30,0.4)]">
+          <h1 className="font-display text-[clamp(2rem,9.5vw,2.75rem)] font-extrabold leading-[0.95] text-tsel-gold drop-shadow-[0_3px_0_rgba(123,12,30,0.4)]">
             Selamat!
           </h1>
-          <p className="mt-1 font-display text-[22px] font-extrabold leading-snug text-white drop-shadow-[0_1px_0_rgba(124,12,30,0.35)]">
+          <p className="mt-1 font-display text-[clamp(1rem,4.5vw,1.3rem)] font-extrabold leading-snug text-white drop-shadow-[0_1px_0_rgba(124,12,30,0.35)]">
             <Highlight text={dapat} />
           </p>
-          <p className="mx-auto mt-1.5 max-w-[34ch] text-[13px] leading-snug text-white/85">{instruction}</p>
+          <p className="mx-auto mt-1.5 max-w-[34ch] text-[clamp(0.7rem,3vw,0.85rem)] leading-snug text-white/85">
+            {instruction}
+          </p>
         </div>
 
-        {/* Countdown — extra breathing room above */}
-        <div className="mt-5">
+        {/* Countdown */}
+        <div className="mt-4">
           <CountdownBar expired={expired} onExpire={onExpire} />
         </div>
 
-        {/* Game area */}
+        {/* Game area — flex-grows to absorb leftover vertical room */}
         <div className="grid min-h-0 w-full flex-1 place-items-center pt-3">{children}</div>
       </div>
 
-      <footer className="relative z-10 shrink-0 px-6 pb-6 pt-2 text-center text-[11px] leading-relaxed text-white/65">
+      <footer
+        className="relative z-10 shrink-0 px-6 pt-2 text-center text-[10.5px] leading-relaxed text-white/65"
+        style={{ paddingBottom: 'max(16px, env(safe-area-inset-bottom))' }}
+      >
         Dengan menekan tombol klaim, kamu menyetujui{' '}
         <a
           href={FAQ_URL}
