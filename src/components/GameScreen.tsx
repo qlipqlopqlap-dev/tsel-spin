@@ -97,7 +97,7 @@ export function GameScreen({ dapat, instruction, expired, onExpire, children }: 
           <h1 className="font-display text-[46px] font-extrabold leading-[0.95] text-tsel-gold drop-shadow-[0_3px_0_rgba(123,12,30,0.4)]">
             Selamat!
           </h1>
-          <p className="mt-1 font-display text-[19px] font-extrabold leading-snug text-white drop-shadow-[0_1px_0_rgba(124,12,30,0.35)]">
+          <p className="mt-1 font-display text-[22px] font-extrabold leading-snug text-white drop-shadow-[0_1px_0_rgba(124,12,30,0.35)]">
             <Highlight text={dapat} />
           </p>
           <p className="mx-auto mt-1.5 max-w-[34ch] text-[13px] leading-snug text-white/85">{instruction}</p>
