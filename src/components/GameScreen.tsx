@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import { TicketPercent, Clock } from 'lucide-react'
 import { CountdownTimer } from './CountdownTimer'
 import { CAMPAIGN } from '../lib/content'
-import { homeUrl } from '../lib/urls'
 
 interface GameScreenProps {
   /** "Kamu dapat ..." line; text in {curly braces} is highlighted gold. */
@@ -83,12 +82,9 @@ export function GameScreen({ dapat, instruction, expired, onExpire, children }: 
       />
 
       <header className="relative z-10 flex shrink-0 items-center justify-between px-5 pt-3">
-        <a
-          href={homeUrl()}
-          className="rounded-full bg-white px-3.5 py-1.5 font-display text-[13px] font-extrabold text-tsel-red shadow-clay-sm ring-1 ring-inset ring-white"
-        >
+        <span className="rounded-full bg-white px-3.5 py-1.5 font-display text-[13px] font-extrabold text-tsel-red shadow-clay-sm ring-1 ring-inset ring-white">
           {CAMPAIGN.brand}
-        </a>
+        </span>
       </header>
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-8">
