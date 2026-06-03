@@ -93,15 +93,12 @@ export function GameScreen({ dapat, instruction, expired, onExpire, children }: 
       </header>
 
       <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-5">
-        {/* Hero text — compact so it fits on smaller phones */}
+        {/* Hero — "Dobelin {kesempatan menangmu}!" is now the focal point */}
         <div className="flex flex-col items-center text-center">
-          <h1 className="font-display text-[clamp(2rem,9.5vw,2.75rem)] font-extrabold leading-[0.95] text-tsel-gold drop-shadow-[0_3px_0_rgba(123,12,30,0.4)]">
-            Selamat!
-          </h1>
-          <p className="mt-1 font-display text-[clamp(1rem,4.5vw,1.3rem)] font-extrabold leading-snug text-white drop-shadow-[0_1px_0_rgba(124,12,30,0.35)]">
+          <p className="font-display text-[clamp(1.75rem,8.5vw,2.5rem)] font-extrabold leading-[1.05] text-white drop-shadow-[0_3px_0_rgba(124,12,30,0.45)]">
             <Highlight text={dapat} />
           </p>
-          <p className="mx-auto mt-1.5 max-w-[34ch] text-[clamp(0.7rem,3vw,0.85rem)] leading-snug text-white/85">
+          <p className="mx-auto mt-2.5 max-w-[34ch] text-[clamp(0.75rem,3.2vw,0.9rem)] leading-snug text-white/85">
             {instruction}
           </p>
         </div>
