@@ -42,13 +42,13 @@ function Highlight({ text }: { text: string }) {
  */
 function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () => void }) {
   return (
-    <div className="relative flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-b from-tsel-cream to-[#f3d896] px-4 py-3 shadow-clay ring-1 ring-inset ring-white/50">
+    <div className="relative flex items-center justify-between gap-3 rounded-3xl bg-gradient-to-b from-tsel-cream to-[#f3d896] px-4 py-2.5 shadow-clay ring-1 ring-inset ring-white/50">
       <div className="min-w-0">
-        <p className="flex items-center gap-1.5 font-display text-[11px] font-bold uppercase tracking-wider text-tsel-ink/65">
+        <p className="flex items-center gap-1.5 font-display text-[10.5px] font-bold uppercase tracking-wider text-tsel-ink/65">
           <Clock className="h-3 w-3" strokeWidth={2.6} />
           Hangus dalam
         </p>
-        <div className="mt-0.5 flex items-center gap-2 font-display text-[26px] font-extrabold leading-none text-tsel-red drop-shadow-[0_1px_0_rgba(124,12,30,0.18)]">
+        <div className="mt-0.5 flex items-center gap-2 font-display text-[clamp(1.25rem,5.5vw,1.6rem)] font-extrabold leading-none text-tsel-red drop-shadow-[0_1px_0_rgba(124,12,30,0.18)]">
           <span aria-hidden className="inline-block h-2 w-2 shrink-0 animate-pulse rounded-full bg-tsel-red" />
           {expired ? (
             <span>Hangus</span>
@@ -59,9 +59,9 @@ function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () =>
       </div>
       <span
         aria-hidden
-        className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-tsel-orange/25 to-tsel-orange/10 text-tsel-orange ring-1 ring-inset ring-tsel-orange/30"
+        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-tsel-orange/25 to-tsel-orange/10 text-tsel-orange ring-1 ring-inset ring-tsel-orange/30"
       >
-        <TicketPercent className="h-6 w-6" strokeWidth={2.3} />
+        <TicketPercent className="h-5 w-5" strokeWidth={2.3} />
       </span>
     </div>
   )
@@ -76,7 +76,7 @@ function CountdownBar({ expired, onExpire }: { expired: boolean; onExpire: () =>
  */
 export function GameScreen({ dapat, instruction, expired, onExpire, children }: GameScreenProps) {
   return (
-    <main className="relative flex h-dvh flex-col overflow-hidden bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
+    <main className="relative flex h-svh flex-col overflow-hidden bg-[radial-gradient(125%_95%_at_50%_6%,#F0315A_0%,#D81E34_36%,#A8112A_70%,#7C0C1E_100%)]">
       {/* warm gold ambient glow — clipped by PhoneFrame's overflow-hidden */}
       <div
         aria-hidden
@@ -92,24 +92,25 @@ export function GameScreen({ dapat, instruction, expired, onExpire, children }: 
         </span>
       </header>
 
-      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-5">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pt-3">
         {/* Hero — "Dobelin {kesempatan menangmu}!" is now the focal point */}
         <div className="flex flex-col items-center text-center">
-          <p className="font-display text-[clamp(1.75rem,8.5vw,2.5rem)] font-extrabold leading-[1.05] text-white drop-shadow-[0_3px_0_rgba(124,12,30,0.45)]">
+          <p className="font-display text-[clamp(1.4rem,7vw,2.1rem)] font-extrabold leading-[1.08] text-white drop-shadow-[0_3px_0_rgba(124,12,30,0.45)]">
             <Highlight text={dapat} />
           </p>
-          <p className="mx-auto mt-2.5 max-w-[34ch] text-[clamp(0.75rem,3.2vw,0.9rem)] leading-snug text-white/85">
+          <p className="mx-auto mt-2 max-w-[34ch] text-[clamp(0.7rem,2.9vw,0.85rem)] leading-snug text-white/85">
             {instruction}
           </p>
         </div>
 
         {/* Countdown */}
-        <div className="mt-4">
+        <div className="mt-3">
           <CountdownBar expired={expired} onExpire={onExpire} />
         </div>
 
-        {/* Game area — flex-grows to absorb leftover vertical room */}
-        <div className="grid min-h-0 w-full flex-1 place-items-center pt-3">{children}</div>
+        {/* Game area — flex-grows to absorb leftover vertical room; pb keeps
+            the bottom row off the footer text. */}
+        <div className="grid min-h-0 w-full flex-1 place-items-center pb-2 pt-2">{children}</div>
       </div>
 
       <footer
