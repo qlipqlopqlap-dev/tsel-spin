@@ -29,12 +29,6 @@ export function GosokPage() {
     reveal(WIN)
   }, [reveal])
 
-  const handleCloseSheet = useCallback(() => {
-    setSheetOpen(false)
-    // Backed out before scratching → unlock the tickets.
-    if (!revealed) setPicked(null)
-  }, [revealed])
-
   return (
     <>
       <GameScreen
@@ -50,13 +44,7 @@ export function GosokPage() {
         )}
       </GameScreen>
 
-      <ScratchSheet
-        open={sheetOpen}
-        prize={WIN}
-        instant={reduced}
-        onScratched={handleScratched}
-        onClose={handleCloseSheet}
-      />
+      <ScratchSheet open={sheetOpen} prize={WIN} instant={reduced} onScratched={handleScratched} />
     </>
   )
 }
