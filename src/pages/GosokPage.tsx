@@ -8,7 +8,7 @@ import { GAMES } from '../lib/games'
 import { getPrize } from '../lib/prizes'
 import { useGameSession } from '../lib/useGameSession'
 
-const WIN = getPrize('pulsa50')
+const WIN = getPrize('kuota15')
 
 export function GosokPage() {
   const { prize, revealed, expired, setExpired, reveal, reduced } = useGameSession()

@@ -62,9 +62,8 @@ export const PRIZES: Prize[] = [
     weight: 20,
     icon: Wifi,
     accent: 'bg-sky-500',
-    bigValue: '15',
-    bigUnit: 'GB',
-    tagline: 'Kuota internet siap diklaim di nomor kamu',
+    bigValue: '10.000 Coin\n+ Kuota 15GB',
+    tagline: 'Kamu bisa claim',
   },
   {
     id: 'pulsa50',

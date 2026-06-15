@@ -70,7 +70,7 @@ export function ResultOverlay({ prize }: ResultOverlayProps) {
             {prize.tagline}
           </p>
           <div className="mt-2.5 flex flex-col items-center leading-none">
-            <span className="font-display text-[clamp(3.5rem,18vw,5rem)] font-extrabold leading-[0.85] text-white drop-shadow-[0_5px_0_rgba(160,40,12,0.35)]">
+            <span className="whitespace-pre-line font-display text-[clamp(1.4rem,6.5vw,2.1rem)] font-extrabold uppercase leading-[1.12] text-white drop-shadow-[0_4px_0_rgba(160,40,12,0.3)]">
               {prize.bigValue}
             </span>
             {showUnit && (
