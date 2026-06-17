@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tangkap Bola!</title>
+<style>
+  :root{
+    --tsel-red:#EC1C24;--tsel-red-dark:#A50E14;--tsel-red-deep:#6E070B;
+    --coin:#FFC72C;--coin-dark:#E5A100;--white:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:radial-gradient(circle at 50% 0%,var(--tsel-red) 0%,var(--tsel-red-dark) 55%,var(--tsel-red-deep) 100%);
+    color:var(--white);user-select:none;touch-action:manipulation;}
+  #app{position:fixed;inset:0;display:flex;flex-direction:column;}
+
+  #hud{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;gap:12px;z-index:5;flex:0 0 auto;}
+  .coins{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.18);padding:8px 16px;border-radius:999px;font-weight:800;font-size:22px;}
+  .coins .ic{width:26px;height:26px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff3c0,var(--coin) 45%,var(--coin-dark));
+    box-shadow:inset 0 -2px 3px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;
+    font-size:14px;color:var(--coin-dark);font-weight:900;}
+  #coinVal{transition:transform .12s ease;display:inline-block;}
+  .timer{display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:120px;}
+  .timer .num{font-weight:800;font-size:16px;letter-spacing:.5px;}
+  .bar{width:120px;height:8px;border-radius:8px;background:rgba(0,0,0,.22);overflow:hidden;}
+  #barFill{height:100%;width:100%;border-radius:8px;background:linear-gradient(90deg,#FFD66B,var(--coin));transition:width .1s linear,background .3s;}
+
+  /* combo & phase indicators */
+  #subhud{position:absolute;top:62px;left:0;right:0;display:flex;justify-content:center;gap:10px;z-index:5;pointer-events:none;}
+  .chip{background:rgba(0,0,0,.22);padding:5px 14px;border-radius:999px;font-weight:800;font-size:13px;letter-spacing:.3px;
+    opacity:0;transform:translateY(-6px);transition:opacity .25s,transform .25s;}
+  .chip.show{opacity:1;transform:translateY(0);}
+  #comboChip{color:var(--coin);}
+  #comboChip.big{animation:comboPulse .3s ease;}
+  @keyframes comboPulse{0%{transform:scale(1)}50%{transform:scale(1.25)}100%{transform:scale(1)}}
+
+  #phaseFlash{position:absolute;top:42%;left:0;right:0;text-align:center;z-index:8;pointer-events:none;
+    font-size:30px;font-weight:900;letter-spacing:1px;color:#fff;text-shadow:0 4px 14px rgba(0,0,0,.5);
+    opacity:0;}
+  #phaseFlash.show{animation:flash 1.4s ease forwards;}
+  @keyframes flash{0%{opacity:0;transform:scale(.6)}20%{opacity:1;transform:scale(1.05)}
+    70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
+
+  #arena{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;}
+
+  .ball{position:absolute;width:88px;height:88px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;font-size:76px;line-height:1;
+    will-change:transform,top;
+    filter:drop-shadow(0 8px 7px rgba(0,0,0,.35));}
+  .ball.spawnpop{animation:pop .18s ease-out;}
+  @keyframes pop{from{transform:scale(.2)}to{transform:scale(1)}}
+  .ball.go{animation:bye .2s ease-in forwards;}
+  @keyframes bye{to{transform:scale(.1) rotate(40deg);opacity:0}}
+  .ball.gold{font-size:80px;filter:drop-shadow(0 0 14px rgba(255,199,44,.9)) drop-shadow(0 8px 7px rgba(0,0,0,.35));}
+  .ball.bomb.tapped{animation:bombShake .3s ease;}
+  @keyframes bombShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px) rotate(-6deg)}75%{transform:translateX(6px) rotate(6deg)}}
+
+  .plus{position:absolute;font-weight:900;font-size:32px;
+    text-shadow:0 2px 4px rgba(0,0,0,.4);pointer-events:none;animation:rise .7s ease-out forwards;z-index:6;}
+  .plus.coin{color:var(--coin);}
+  .plus.gold{color:#FFE680;font-size:40px;}
+  .plus.miss{color:#9fd4ff;font-size:24px;}
+  @keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}
+    20%{opacity:1;transform:translateY(-6px) scale(1.1)}
+    100%{transform:translateY(-64px) scale(1);opacity:0}}
+
+  #overlay{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:34px 28px;gap:0;
+    background:radial-gradient(circle at 50% 35%,rgba(165,14,20,.55),rgba(110,7,11,.92));}
+  #overlay[hidden]{display:none;}
+
+  .ball-badge{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.16),rgba(0,0,0,.18) 70%);
+    box-shadow:0 0 0 6px rgba(255,255,255,.08),0 18px 40px rgba(0,0,0,.4);
+    animation:float 2.6s ease-in-out infinite;margin-bottom:26px;}
+  .logo-emoji{font-size:84px;line-height:1;}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+  .eyebrow{font-size:13px;font-weight:800;letter-spacing:4px;text-transform:uppercase;
+    color:var(--coin);opacity:.95;margin-bottom:14px;}
+  h1{font-size:30px;font-weight:900;line-height:1.18;letter-spacing:-.4px;max-width:330px;
+    text-shadow:0 3px 10px rgba(0,0,0,.28);}
+  .sub{font-size:16px;opacity:.92;max-width:300px;line-height:1.5;font-weight:600;margin-top:16px;}
+  .rules{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:18px;}
+  .pill{display:inline-block;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.12);
+    padding:10px 20px;border-radius:999px;font-size:14px;font-weight:700;line-height:1.3;
+    max-width:300px;opacity:.96;}
+  .btn{margin-top:30px;background:var(--white);color:var(--tsel-red);font-weight:900;font-size:19px;
+    padding:17px 46px;border:none;border-radius:28px;
+    box-shadow:0 8px 0 rgba(0,0,0,.18),0 12px 22px rgba(0,0,0,.3);
+    cursor:pointer;transition:transform .08s,box-shadow .08s;letter-spacing:1px;}
+  .btn:active{transform:translateY(5px);box-shadow:0 3px 0 rgba(0,0,0,.18);}
+  .score-big{display:flex;align-items:center;justify-content:center;gap:12px;font-size:62px;font-weight:900;
+    color:var(--coin);text-shadow:0 4px 10px rgba(0,0,0,.35);}
+  .score-big .ic{width:52px;height:52px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#fff3c0,var(--coin) 45%,var(--coin-dark));
+    display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--coin-dark);}
+  .label{font-size:13px;letter-spacing:3px;opacity:.85;font-weight:700;text-transform:uppercase;}
+  .stat{font-size:14px;opacity:.9;font-weight:600;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud">
+    <div class="coins"><span class="ic">$</span><span id="coinVal">0</span></div>
+    <div class="timer">
+      <div class="num"><span id="timeVal">60</span> detik</div>
+      <div class="bar"><div id="barFill"></div></div>
+    </div>
+  </div>
+
+  <div id="subhud">
+    <div class="chip" id="comboChip">Combo x1</div>
+  </div>
+  <div id="phaseFlash"></div>
+
+  <div id="arena"></div>
+
+  <div id="overlay">
+    <div class="ball-badge"><div class="logo-emoji" id="logoBall">&#9917;</div></div>
+    <div class="eyebrow" id="ovEyebrow">Misi Spesial</div>
+    <h1 id="ovTitle">Selesaikan misi TANGKAP BOLA ini untuk kesempatan dobelin bonus-mu</h1>
+    <p class="sub" id="ovSub">Tangkap bola yang berjatuhan dan kumpulkan poin sebanyak mungkin dalam 60 detik.</p>
+    <div class="rules" id="ovRules"></div>
+    <button class="btn" id="startBtn" type="button">MAIN</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var GAME_TIME = 60;
+  var BALL_EMOJI  = '⚽';        // ⚽
+  var GOLD_EMOJI  = '⭐';        // ⭐
+  var BOMB_EMOJI  = '💣';  // 💣
+  var TROPHY      = '🏆';  // 🏆
+
+  var arena   = document.getElementById('arena');
+  var coinVal = document.getElementById('coinVal');
+  var timeVal = document.getElementById('timeVal');
+  var barFill = document.getElementById('barFill');
+  var overlay = document.getElementById('overlay');
+  var ovTitle = document.getElementById('ovTitle');
+  var ovSub   = document.getElementById('ovSub');
+  var ovRules = document.getElementById('ovRules');
+  var ovEyebrow = document.getElementById('ovEyebrow');
+  var logoBall= document.getElementById('logoBall');
+  var startBtn= document.getElementById('startBtn');
+  var comboChip = document.getElementById('comboChip');
+  var phaseFlash= document.getElementById('phaseFlash');
+
+  var coins=0, timeLeft=GAME_TIME, running=false;
+  var combo=0, maxCombo=0, caught=0, goldCaught=0;
+  var spawnTimer=null, tickTimer=null, rafId=null;
+  var lastFrame=0, currentPhase=0;
+  var balls=[];      // active falling balls
+  var ended=false;   // game finished -> next click proceeds to the undian
+  var BALL=88;
+
+  function rand(min,max){return Math.random()*(max-min)+min;}
+
+  function showOverlay(show){
+    if(show){ overlay.hidden=false; overlay.style.display='flex'; }
+    else    { overlay.hidden=true;  overlay.style.display='none'; }
+  }
+
+  // progress 0..1 across the game
+  function progress(){ return 1 - (timeLeft/GAME_TIME); }
+  function elapsed(){ return GAME_TIME - timeLeft; }
+
+  // ---------- combo ----------
+  function setCombo(n){
+    combo=n;
+    if(combo>maxCombo) maxCombo=combo;
+    var mult=comboMult();
+    if(combo>=2){
+      comboChip.textContent='Combo x'+mult+' 🔥';
+      comboChip.classList.add('show');
+      comboChip.classList.remove('big'); void comboChip.offsetWidth; comboChip.classList.add('big');
+    }else{
+      comboChip.classList.remove('show');
+    }
+  }
+  // every 3 in a row raises multiplier: 1->2->3 (cap 3)
+  function comboMult(){
+    if(combo>=8) return 3;
+    if(combo>=4) return 2;
+    return 1;
+  }
+
+  // ---------- phases ----------
+  // phase 0: 0-15s  warmup, only normal balls
+  // phase 1: 15-30s faster falling
+  // phase 2: 30-45s BOMBS appear, gold chance up
+  // phase 3: 45-60s chaos: fast falls, more bombs
+  function phaseFor(t){
+    if(t<15) return 0;
+    if(t<30) return 1;
+    if(t<45) return 2;
+    return 3;
+  }
+  var phaseMsg=['','CEPAT!','AWAS BOM! 💣','MODE GILA! 🔥'];
+  function checkPhase(){
+    var p=phaseFor(elapsed());
+    if(p!==currentPhase){
+      currentPhase=p;
+      if(phaseMsg[p]){
+        phaseFlash.textContent=phaseMsg[p];
+        phaseFlash.classList.remove('show'); void phaseFlash.offsetWidth; phaseFlash.classList.add('show');
+      }
+      // bar turns hotter as phases escalate
+      if(p>=3) barFill.style.background='linear-gradient(90deg,#FF5E3A,#FF2D55)';
+      else if(p>=2) barFill.style.background='linear-gradient(90deg,#FF8A3D,var(--coin))';
+    }
+  }
+
+  // ---------- spawning ----------
+  function pickType(){
+    var p=currentPhase;
+    var r=Math.random();
+    // bombs only from phase 2 onward, frequency rising
+    var bombChance = p>=2 ? (p===2 ? 0.20 : 0.32) : 0;
+    var goldChance = p>=2 ? 0.10 : 0.07;
+    if(r < bombChance) return 'bomb';
+    if(r < bombChance+goldChance) return 'gold';
+    return 'normal';
+  }
+
+  function spawnBall(){
+    if(!running) return;
+    var w=arena.clientWidth, h=arena.clientHeight;
+    if(w<BALL||h<BALL) return;
+
+    var type=pickType();
+    var ball=document.createElement('div');
+    ball.className='ball spawnpop'+(type==='gold'?' gold':'')+(type==='bomb'?' bomb':'');
+    ball.textContent = type==='gold'?GOLD_EMOJI : type==='bomb'?BOMB_EMOJI : BALL_EMOJI;
+
+    var x=rand(6, w-BALL-6);
+    ball.style.left=x+'px';
+    ball.style.top='-'+BALL+'px';
+
+    // fall speed scales with progress (px/sec)
+    var base = 150 + progress()*260;          // 150 -> ~410
+    if(type==='gold') base *= 0.85;           // gold a touch slower (catchable bonus)
+    if(type==='bomb') base *= 1.05;
+    var speed = base * rand(0.9,1.15);
+
+    var obj={el:ball,type:type,x:x,y:-BALL,vy:speed,done:false};
+
+    function grab(e){
+      if(e){ e.preventDefault(); e.stopPropagation(); }
+      if(obj.done) return;
+      obj.done=true;
+      if(type==='bomb'){ hitBomb(obj); }
+      else { catchBall(obj); }
+    }
+    ball.addEventListener('pointerdown',grab,{passive:false});
+    ball.addEventListener('touchstart',grab,{passive:false});
+    ball.addEventListener('mousedown',grab);
+
+    arena.appendChild(ball);
+    balls.push(obj);
+  }
+
+  function removeBall(obj){
+    obj.done=true;
+    var i=balls.indexOf(obj);
+    if(i>=0) balls.splice(i,1);
+    if(obj.el.parentNode) obj.el.parentNode.removeChild(obj.el);
+  }
+
+  function floatText(x,y,txt,cls){
+    var p=document.createElement('div');
+    p.className='plus '+cls; p.textContent=txt;
+    p.style.left=x+'px'; p.style.top=y+'px';
+    arena.appendChild(p);
+    setTimeout(function(){ if(p.parentNode) p.parentNode.removeChild(p); },700);
+  }
+
+  function bump(){
+    coinVal.style.transform='scale(1.4)';
+    setTimeout(function(){coinVal.style.transform='scale(1)';},120);
+  }
+
+  function catchBall(obj){
+    var gain = obj.type==='gold' ? 5 : 1;
+    setCombo(combo+1);
+    var mult = comboMult();
+    var total = gain*mult;
+    coins += total; caught++;
+    if(obj.type==='gold') goldCaught++;
+    coinVal.textContent=coins; bump();
+
+    floatText(parseFloat(obj.el.style.left), parseFloat(obj.el.style.top),
+      '+'+total, obj.type==='gold'?'gold':'coin');
+
+    obj.el.classList.add('go');
+    var el=obj.el;
+    removeBall(obj);
+    setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },200);
+  }
+
+  // bomb tapped: no coin gained, combo resets — but NO penalty
+  function hitBomb(obj){
+    setCombo(0);
+    obj.el.classList.add('tapped');
+    floatText(parseFloat(obj.el.style.left), parseFloat(obj.el.style.top),'X','miss');
+    var el=obj.el;
+    removeBall(obj);
+    setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },300);
+  }
+
+  // ball reached the ground without being caught
+  function missBall(obj){
+    if(obj.type!=='bomb'){ setCombo(0); }   // missing a real ball breaks combo
+    removeBall(obj);
+  }
+
+  // ---------- main loop (physics) ----------
+  function loop(ts){
+    if(!running) return;
+    if(!lastFrame) lastFrame=ts;
+    var dt=(ts-lastFrame)/1000; lastFrame=ts;
+    if(dt>0.05) dt=0.05; // clamp on tab-switch
+    var h=arena.clientHeight;
+    for(var i=balls.length-1;i>=0;i--){
+      var o=balls[i];
+      if(o.done) continue;
+      o.y += o.vy*dt;
+      o.el.style.top=o.y+'px';
+      if(o.y > h){ missBall(o); }
+    }
+    rafId=requestAnimationFrame(loop);
+  }
+
+  function scheduleSpawn(){
+    if(!running) return;
+    var p=progress();
+    // gap shrinks as game progresses -> more balls on screen
+    var gap = rand(720,1050) - p*430;
+    spawnTimer=setTimeout(function(){
+      spawnBall();
+      // late game: chance to double-spawn for density
+      if(currentPhase>=3 && Math.random()<0.35) spawnBall();
+      scheduleSpawn();
+    }, Math.max(360,gap));
+  }
+
+  function tick(){
+    timeLeft--;
+    timeVal.textContent=timeLeft;
+    barFill.style.width=(timeLeft/GAME_TIME*100)+'%';
+    checkPhase();
+    if(timeLeft<=0) endGame();
+  }
+
+  function clearArena(){
+    balls=[];
+    arena.innerHTML='';
+  }
+
+  function startGame(){
+    coins=0; timeLeft=GAME_TIME; running=true; ended=false;
+    combo=0; maxCombo=0; caught=0; goldCaught=0; currentPhase=0;
+    coinVal.textContent='0'; timeVal.textContent=GAME_TIME;
+    barFill.style.width='100%';
+    barFill.style.background='linear-gradient(90deg,#FFD66B,var(--coin))';
+    comboChip.classList.remove('show');
+    clearArena();
+    showOverlay(false);
+    clearTimeout(spawnTimer); clearInterval(tickTimer); cancelAnimationFrame(rafId);
+    lastFrame=0;
+    setTimeout(function(){ spawnBall(); scheduleSpawn(); },60);
+    tickTimer=setInterval(tick,1000);
+    rafId=requestAnimationFrame(loop);
+  }
+
+  function endGame(){
+    running=false; ended=true;
+    clearTimeout(spawnTimer); clearInterval(tickTimer); cancelAnimationFrame(rafId);
+    clearArena();
+    comboChip.classList.remove('show');
+    phaseFlash.classList.remove('show');
+    logoBall.textContent=TROPHY;
+    ovEyebrow.textContent='Hasil';
+    ovTitle.textContent='SELAMAT!';
+    ovTitle.style.fontSize='40px';
+    ovRules.style.display='none';
+    ovSub.innerHTML=
+      '<div class="score-big"><span class="ic">$</span>'+coins+'</div>'+
+      '<div class="stat" style="margin-top:10px">Combo tertinggi: x'+comboMultFromCombo(maxCombo)+' &middot; '+goldCaught+' bola emas</div>'+
+      '<div style="margin-top:12px">Coin kamu bisa dipakai putar spin wheel &amp; cek dapat bonus apa!</div>';
+    startBtn.textContent='KLIK UNTUK SPIN & KLAIM';
+    showOverlay(true);
+  }
+  function comboMultFromCombo(c){ if(c>=8) return 3; if(c>=4) return 2; return 1; }
+
+  startBtn.addEventListener('click',function(){
+    // After the 60s mission ends, this button proceeds to the undian instead of
+    // replaying. The React host listens for this message and swaps in the game.
+    if(ended){
+      try{ window.parent.postMessage('catchball:done','*'); }catch(e){}
+      return;
+    }
+    logoBall.textContent=BALL_EMOJI;
+    ovEyebrow.textContent='Misi Spesial';
+    ovTitle.textContent='Selesaikan misi TANGKAP BOLA ini untuk kesempatan dobelin bonus-mu';
+    ovTitle.style.fontSize='30px';
+    ovRules.style.display='flex';
+    ovSub.textContent='Tangkap bola yang berjatuhan dan kumpulkan poin sebanyak mungkin dalam 60 detik.';
+    startBtn.textContent='MAIN';
+    startGame();
+  });
+})();
+</script>
+</body>
+</html>
