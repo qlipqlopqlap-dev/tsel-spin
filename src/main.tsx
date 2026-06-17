@@ -10,7 +10,7 @@ import './styles.css'
 // A 60s "Tangkap Bola" mission gates the undian: play it first, then continue.
 function Root() {
   const [passed, setPassed] = useState(false)
-  if (!passed) return <CatchBallGate onComplete={() => setPassed(true)} />
+  if (!passed) return <CatchBallGate onComplete={() => setPassed(true)} nextAction="gosok kartu" nextButton="GOSOK" />
   return <GosokPage />
 }
 

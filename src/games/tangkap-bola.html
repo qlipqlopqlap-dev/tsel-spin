@@ -392,8 +392,8 @@
     ovSub.innerHTML=
       '<div class="score-big"><span class="ic">$</span>'+coins+'</div>'+
       '<div class="stat" style="margin-top:10px">Combo tertinggi: x'+comboMultFromCombo(maxCombo)+' &middot; '+goldCaught+' bola emas</div>'+
-      '<div style="margin-top:12px">Coin kamu bisa dipakai putar spin wheel &amp; cek dapat bonus apa!</div>';
-    startBtn.textContent='KLIK UNTUK SPIN & KLAIM';
+      '<div style="margin-top:12px">Coin kamu bisa dipakai __NEXT_ACTION__ &amp; cek dapat bonus apa!</div>';
+    startBtn.textContent='KLIK UNTUK __NEXT_BTN__ & KLAIM';
     showOverlay(true);
   }
   function comboMultFromCombo(c){ if(c>=8) return 3; if(c>=4) return 2; return 1; }
