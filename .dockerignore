@@ -1,0 +1,15 @@
+node_modules
+dist
+dist-ssr
+logs
+*.log
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+deploy
+ecosystem.config.cjs
+README.md
+Dockerfile
+.dockerignore
